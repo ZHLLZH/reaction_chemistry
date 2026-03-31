@@ -79,6 +79,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .ion-card.pos .ion-charge{color:var(--pos)}
 .ion-card.neg .ion-charge{color:var(--neg)}
 .ion-hint{font-size:10px;color:var(--muted);margin-top:3px;font-style:italic}
+.ion-group{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 6px;border-radius:10px;margin-top:4px;background:rgba(255,255,255,.07);color:var(--muted)}
 
 /* formula builder */
 .step-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
@@ -256,26 +257,26 @@ select{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px so
       <div class="hint-box">Every ionic compound = one positive ion + one negative ion. Learn these symbols and you can write any formula.</div>
       <div class="section-label" style="color:var(--pos)">Positive ions — metals</div>
       <div class="ion-grid">
-        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt</div></div>
-        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">bananas!</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">phone batteries</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">white flame</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">pipes &amp; wires</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail!</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">bananas!</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">phone batteries</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div><div class="ion-group">Group 2</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">white flame</div><div class="ion-group">Group 2</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">pipes &amp; wires</div><div class="ion-group">Transition</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail!</div><div class="ion-group">Transition</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div><div class="ion-group">Group 3</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div><div class="ion-group">Transition</div></div>
       </div>
       <div class="section-label" style="color:var(--neg)">Negative ions — non-metals</div>
       <div class="ion-grid">
-        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 7</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 7</div></div>
+        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 6</div></div>
+        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 6</div></div>
+        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div><div class="ion-group">Polyatomic</div></div>
       </div>
     </div>
 
@@ -367,26 +368,26 @@ select{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px so
       <div class="hint-box">No cheat sheet was given in class — so here is one. Red border = positive (metal). Teal border = negative (non-metal).</div>
       <div class="section-label" style="color:var(--pos)">Positive ions — metals</div>
       <div class="ion-grid">
-        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt NaCl</div></div>
-        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">K = Kalium</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">Li-ion battery</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">burns white</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">Cu = Cuprum</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail story</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div></div>
-        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt NaCl</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">K = Kalium</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">Li-ion battery</div><div class="ion-group">Group 1</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div><div class="ion-group">Group 2</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">burns white</div><div class="ion-group">Group 2</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">Cu = Cuprum</div><div class="ion-group">Transition</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail story</div><div class="ion-group">Transition</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div><div class="ion-group">Group 3</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div><div class="ion-group">Transition</div></div>
       </div>
       <div class="section-label" style="color:var(--neg)">Negative ions — non-metals</div>
       <div class="ion-grid">
-        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
-        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div></div>
-        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 7</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 7</div></div>
+        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 6</div></div>
+        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div><div class="ion-group">Group 6</div></div>
+        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div><div class="ion-group">Polyatomic</div></div>
+        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div><div class="ion-group">Polyatomic</div></div>
       </div>
     </div>
 
