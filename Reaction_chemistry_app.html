@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Reaction Chemistry App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface2: #22263a;
+  --border: rgba(255,255,255,0.08);
+  --text: #eef0f8;
+  --muted: #8b90a8;
+  --accent: #6c63ff;
+  --accent2: #ff6b6b;
+  --accent3: #43e097;
+  --accent4: #f7b731;
+  --pos: #ff6b6b;
+  --neg: #4ecdc4;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif}
+
+/* ── SCREENS ── */
+.screen{display:none;height:100vh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.screen.active{display:flex;flex-direction:column}
+
+/* ── HOME ── */
+#home{padding:0;align-items:stretch}
+.home-hero{padding:48px 24px 32px;text-align:center;background:linear-gradient(160deg,#1a1d27 0%,#12152a 100%)}
+.home-hero h1{font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.home-hero h1 span{color:var(--accent)}
+.home-hero p{font-size:14px;color:var(--muted);line-height:1.5}
+.tool-grid{padding:20px 16px 32px;display:flex;flex-direction:column;gap:12px}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:transform .15s,border-color .15s;text-decoration:none}
+.tool-card:active{transform:scale(0.98)}
+.tool-card.c1{border-left:3px solid var(--accent)}
+.tool-card.c2{border-left:3px solid var(--accent3)}
+.tool-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.tool-card.c1 .tool-icon{background:rgba(108,99,255,.15)}
+.tool-card.c2 .tool-icon{background:rgba(67,224,151,.15)}
+.tool-card-text h3{font-size:16px;font-weight:700;margin-bottom:3px}
+.tool-card-text p{font-size:12px;color:var(--muted);line-height:1.4}
+.slo-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.slo-badge{font-size:10px;padding:2px 7px;border-radius:20px;background:rgba(255,255,255,.07);color:var(--muted);font-weight:600}
+
+/* ── TOOL SCREEN ── */
+.tool-screen{flex-direction:column}
+.top-bar{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;flex-shrink:0}
+.back-btn{width:36px;height:36px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0}
+.top-bar h2{font-size:16px;font-weight:700;flex:1}
+.tab-scroll{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tab-scroll::-webkit-scrollbar{display:none}
+.tab-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);font-family:'Nunito',sans-serif;transition:all .15s}
+.tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.tab-content{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.panel{display:none}.panel.active{display:block}
+
+/* ── CARDS & ELEMENTS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.section-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin:16px 0 8px}
+.hint-box{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.25);border-radius:var(--radius-sm);padding:12px 14px;font-size:13px;color:#b8b4ff;line-height:1.5;margin-bottom:14px}
+
+/* ion cheat sheet */
+.ion-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.ion-card{background:var(--surface2);border-radius:var(--radius-sm);padding:10px 12px;border-left:3px solid transparent}
+.ion-card.pos{border-left-color:var(--pos)}
+.ion-card.neg{border-left-color:var(--neg)}
+.ion-sym{font-size:20px;font-weight:700;font-family:'Space Mono',monospace}
+.ion-name{font-size:11px;color:var(--muted);margin-top:2px}
+.ion-charge{font-size:12px;font-weight:700;margin-top:3px}
+.ion-card.pos .ion-charge{color:var(--pos)}
+.ion-card.neg .ion-charge{color:var(--neg)}
+.ion-hint{font-size:10px;color:var(--muted);margin-top:3px;font-style:italic}
+
+/* formula builder */
+.step-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1}
+.step-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.step-detail{font-size:12px;color:var(--muted);line-height:1.5}
+select{width:100%;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;font-family:'Nunito',sans-serif;margin:8px 0;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b90a8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:4px;transition:opacity .15s}
+.btn:active{opacity:.8}
+.btn.green{background:var(--accent3);color:#0f1117}
+.result-card{background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:var(--radius-sm);padding:14px;margin-top:10px;display:none}
+.result-card.show{display:block}
+.big-formula{font-size:28px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent);margin:6px 0}
+.balance-check{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* observations */
+.reaction-type-bar{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.reaction-type-bar::-webkit-scrollbar{display:none}
+.rt-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);font-family:'Nunito',sans-serif}
+.rt-btn.active{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.obs-summary{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:14px}
+.obs-summary h4{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--accent3)}
+.obs-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.obs-cell{background:var(--surface);border-radius:var(--radius-sm);padding:10px}
+.obs-cell-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.obs-cell-val{font-size:12px;line-height:1.4}
+.q-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px}
+.q-type-tag{font-size:10px;font-weight:700;color:var(--accent4);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.q-text{font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.4}
+.q-hint{font-size:11px;color:var(--muted);margin-bottom:10px}
+.opts-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.opt{padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);font-size:13px;cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;color:var(--text);transition:all .15s;width:100%}
+.opt:active{transform:scale(.99)}
+.opt.selected{border-color:var(--accent);background:rgba(108,99,255,.15);color:#b8b4ff}
+.opt.correct{border-color:var(--accent3);background:rgba(67,224,151,.15);color:var(--accent3)}
+.opt.wrong{border-color:var(--accent2);background:rgba(255,107,107,.15);color:var(--accent2)}
+.opt.reveal{border-color:var(--accent3);background:rgba(67,224,151,.1);color:var(--accent3)}
+.opt.disabled{pointer-events:none}
+.check-btn{padding:10px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;width:100%}
+.fb-msg{font-size:12px;margin-top:8px;padding:8px 12px;border-radius:var(--radius-sm);display:none}
+.fb-msg.ok{background:rgba(67,224,151,.1);color:var(--accent3);display:block}
+.fb-msg.bad{background:rgba(255,107,107,.1);color:var(--accent2);display:block}
+.eq-reveal{background:var(--surface);border-radius:var(--radius-sm);padding:12px;margin-top:8px;font-size:13px;display:none}
+.eq-reveal.show{display:block}
+.eq-reveal strong{color:var(--accent4);display:block;margin-bottom:4px;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+
+/* word equations */
+.pat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.pat-card{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;cursor:pointer;border:1px solid var(--border);transition:all .15s}
+.pat-card:active{transform:scale(.97)}
+.pat-card.sel{border-color:var(--accent3);background:rgba(67,224,151,.1)}
+.pat-card .pat-num{font-size:22px;font-weight:800;color:var(--muted);margin-bottom:4px;transition:color .15s}
+.pat-card.sel .pat-num{color:var(--accent3)}
+.pat-card .pat-name{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.pat-card .pat-tmpl{font-size:10px;color:var(--muted);line-height:1.5}
+.pat-card.sel .pat-name,.pat-card.sel .pat-tmpl{color:#a8f0d8}
+.builder-box{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;display:none}
+.builder-box.show{display:block}
+.builder-label{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}
+.eq-output{background:rgba(67,224,151,.08);border:1px solid rgba(67,224,151,.2);border-radius:var(--radius-sm);padding:14px;margin-top:10px;display:none}
+.eq-output.show{display:block}
+.eq-output-text{font-size:15px;font-weight:700;color:var(--accent3);line-height:1.6;font-family:'Space Mono',monospace}
+.eq-note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+
+/* memory trainer */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.mode-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;text-align:center;cursor:pointer;border:1px solid var(--border)}
+.mode-card.active{border-color:var(--accent4);background:rgba(247,183,49,.1)}
+.mode-card .mode-icon{font-size:24px;margin-bottom:6px}
+.mode-card .mode-name{font-size:13px;font-weight:700}
+.mode-card .mode-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.mode-card.active .mode-name{color:var(--accent4)}
+
+/* flashcard */
+.fc-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 0}
+.fc-card{width:100%;max-width:340px;height:180px;perspective:800px;cursor:pointer}
+.fc-inner{width:100%;height:100%;transform-style:preserve-3d;transition:transform .4s;position:relative}
+.fc-inner.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:20px}
+.fc-front{background:var(--surface2);border:1px solid var(--border)}
+.fc-back{background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);transform:rotateY(180deg)}
+.fc-q{font-size:24px;font-weight:800;text-align:center}
+.fc-sub{font-size:12px;color:var(--muted);text-align:center}
+.fc-sym{font-size:30px;font-weight:700;font-family:'Space Mono',monospace;color:var(--accent)}
+.fc-charge{font-size:14px;color:var(--muted)}
+.fc-mem{font-size:11px;color:var(--muted);text-align:center;font-style:italic}
+.fc-tap-hint{font-size:11px;color:var(--muted);text-align:center}
+.fc-nav{display:flex;gap:10px;align-items:center}
+.fc-nav-btn{padding:10px 24px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+.fc-nav-btn:active{opacity:.7}
+.fc-count{font-size:13px;color:var(--muted);min-width:60px;text-align:center}
+.fc-dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;max-width:300px}
+.fc-dot{width:8px;height:8px;border-radius:50%;background:var(--surface2);border:1px solid var(--border)}
+.fc-dot.seen{background:var(--accent3)}
+.fc-dot.cur{background:var(--accent)}
+.shuffle-btn{padding:8px 20px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif}
+
+/* quiz */
+.quiz-score{display:flex;gap:16px;margin-bottom:14px}
+.score-pill{background:var(--surface2);border-radius:20px;padding:8px 16px;font-size:13px;flex:1;text-align:center}
+.score-pill span{font-size:22px;font-weight:800;display:block}
+.score-pill span.green{color:var(--accent3)}
+.score-pill span.red{color:var(--accent2)}
+.quiz-mode-row{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.quiz-mode-row::-webkit-scrollbar{display:none}
+.qm-btn{padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;color:var(--muted);font-family:'Nunito',sans-serif}
+.qm-btn.active{background:var(--accent4);border-color:var(--accent4);color:#0f1117}
+.quiz-q-card{background:var(--surface2);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+.quiz-q-text{font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;flex-direction:column;gap:8px}
+.quiz-opt{padding:12px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface);font-size:14px;cursor:pointer;text-align:left;font-family:'Nunito',sans-serif;color:var(--text);font-weight:600;transition:all .15s}
+.quiz-opt:active{transform:scale(.99)}
+.quiz-opt.correct{border-color:var(--accent3);background:rgba(67,224,151,.15);color:var(--accent3)}
+.quiz-opt.wrong{border-color:var(--accent2);background:rgba(255,107,107,.15);color:var(--accent2)}
+.quiz-opt.reveal{border-color:var(--accent3);background:rgba(67,224,151,.1);color:var(--accent3)}
+.quiz-opt.disabled{pointer-events:none}
+.quiz-fb{font-size:13px;margin-top:10px;padding:10px 14px;border-radius:var(--radius-sm);display:none;line-height:1.5}
+.quiz-fb.ok{background:rgba(67,224,151,.1);color:var(--accent3);display:block}
+.quiz-fb.bad{background:rgba(255,107,107,.1);color:var(--accent2);display:block}
+.next-btn{width:100%;padding:12px;border-radius:var(--radius-sm);border:none;background:var(--surface2);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:10px;display:none}
+</style>
+</head>
+<body>
+
+<!-- ══ HOME SCREEN ══ -->
+<div id="home" class="screen active">
+  <div class="home-hero">
+    <h1> <span>Chemistry</span> App</h1>
+    <p>Year 10 Science — Reaction Chemistry<br></p>
+  </div>
+  <div class="tool-grid">
+    <div class="tool-card c1" onclick="openTool('tool1')">
+      <div class="tool-icon">⚗️</div>
+      <div class="tool-card-text">
+        <h3>Chemistry Helper</h3>
+        <p>Ion cheat sheet, formula writing, observations, and word equations</p>
+        <div class="slo-badges">
+          <span class="slo-badge">SLO 2</span>
+          <span class="slo-badge">SLO 5</span>
+          <span class="slo-badge">SLO 7</span>
+        </div>
+      </div>
+    </div>
+    <div class="tool-card c2" onclick="openTool('tool2')">
+      <div class="tool-icon">🧠</div>
+      <div class="tool-card-text">
+        <h3>Ion Memory Trainer</h3>
+        <p>Cheat sheet, memory tricks, flashcards, and quiz</p>
+        <div class="slo-badges">
+          <span class="slo-badge">SLO 2</span>
+          <span class="slo-badge">Ion symbols</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOOL 1: CHEMISTRY HELPER ══ -->
+<div id="tool1" class="screen tool-screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <h2>Chemistry Helper</h2>
+  </div>
+  <div class="tab-scroll">
+    <button class="tab-btn active" onclick="switchTab('t1','ions',this)">Ion sheet</button>
+    <button class="tab-btn" onclick="switchTab('t1','formulas',this)">Formulas</button>
+    <button class="tab-btn" onclick="switchTab('t1','observations',this)">Observations</button>
+    <button class="tab-btn" onclick="switchTab('t1','equations',this)">Word equations</button>
+  </div>
+  <div class="tab-content">
+
+    <!-- ION SHEET -->
+    <div id="t1-ions" class="panel active">
+      <div class="hint-box">Every ionic compound = one positive ion + one negative ion. Learn these symbols and you can write any formula.</div>
+      <div class="section-label" style="color:var(--pos)">Positive ions — metals</div>
+      <div class="ion-grid">
+        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt</div></div>
+        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">bananas!</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">phone batteries</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">white flame</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">pipes &amp; wires</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail!</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div></div>
+      </div>
+      <div class="section-label" style="color:var(--neg)">Negative ions — non-metals</div>
+      <div class="ion-grid">
+        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div></div>
+      </div>
+    </div>
+
+    <!-- FORMULAS -->
+    <div id="t1-formulas" class="panel">
+      <div class="step-card"><div class="step-num">1</div><div class="step-body"><div class="step-title">Split the name into two parts</div><div class="step-detail">First word = metal (positive). Second word = non-metal (negative).<br>E.g. calcium chloride → Ca²⁺ + Cl⁻</div></div></div>
+      <div class="step-card"><div class="step-num">2</div><div class="step-body"><div class="step-title">Write down both charges</div><div class="step-detail">Look them up on the ion sheet if needed.</div></div></div>
+      <div class="step-card"><div class="step-num">3</div><div class="step-body"><div class="step-title">Swap the numbers → subscripts</div><div class="step-detail">Ca²⁺ Cl⁻ → swap 2 and 1 → CaCl₂<br>If both numbers are the same → just write 1 of each (no numbers).</div></div></div>
+      <div class="step-card"><div class="step-num">4</div><div class="step-body"><div class="step-title">Check charges balance to zero</div><div class="step-detail">+2 and −2 cancel out = 0 ✓</div></div></div>
+      <div class="section-label">Try it</div>
+      <select id="f1-sel">
+        <option value="calcium chloride">Calcium chloride</option>
+        <option value="aluminium oxide">Aluminium oxide</option>
+        <option value="copper oxide">Copper oxide</option>
+        <option value="sodium sulfate">Sodium sulfate</option>
+        <option value="magnesium chloride">Magnesium chloride</option>
+        <option value="zinc oxide">Zinc oxide</option>
+        <option value="potassium chloride">Potassium chloride</option>
+        <option value="aluminium chloride">Aluminium chloride</option>
+        <option value="iron(iii) oxide">Iron(III) oxide</option>
+      </select>
+      <button class="btn" onclick="showFormula1()">Show me the steps</button>
+      <div class="result-card" id="f1-result"></div>
+    </div>
+
+    <!-- OBSERVATIONS -->
+    <div id="t1-observations" class="panel">
+      <div class="reaction-type-bar">
+        <button class="rt-btn active" onclick="setObsType('acid',this)">Metal + acid</button>
+        <button class="rt-btn" onclick="setObsType('oxygen',this)">Metal + oxygen</button>
+        <button class="rt-btn" onclick="setObsType('water',this)">Metal + water</button>
+      </div>
+      <div id="obs-summary-area"></div>
+      <div class="section-label">Practice questions</div>
+      <div id="obs-q-area"></div>
+    </div>
+
+    <!-- WORD EQUATIONS -->
+    <div id="t1-equations" class="panel">
+      <div class="hint-box">Every metal reaction fits one of three patterns. Tap a pattern to practise it.</div>
+      <div class="section-label">Step 1 — pick the reaction type</div>
+      <div class="pat-grid">
+        <div class="pat-card" id="pat-oxygen" onclick="selectPat('oxygen',this)">
+          <div class="pat-num">1</div>
+          <div class="pat-name">+ oxygen</div>
+          <div class="pat-tmpl">Metal + oxygen → Metal oxide</div>
+        </div>
+        <div class="pat-card" id="pat-water" onclick="selectPat('water',this)">
+          <div class="pat-num">2</div>
+          <div class="pat-name">+ water</div>
+          <div class="pat-tmpl">Metal + water → Metal hydroxide + hydrogen gas</div>
+        </div>
+        <div class="pat-card" id="pat-acid" onclick="selectPat('acid',this)">
+          <div class="pat-num">3</div>
+          <div class="pat-name">+ acid</div>
+          <div class="pat-tmpl">Metal + acid → Metal salt + hydrogen gas</div>
+        </div>
+      </div>
+      <div class="builder-box" id="eq-builder">
+        <div class="builder-label" id="eq-instruction"></div>
+        <div id="eq-selects"></div>
+        <button class="btn green" onclick="buildEq()">Build the equation</button>
+        <div class="eq-output" id="eq-output">
+          <div class="eq-output-text" id="eq-output-text"></div>
+          <div class="eq-note" id="eq-note"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ TOOL 2: ION MEMORY TRAINER ══ -->
+<div id="tool2" class="screen tool-screen">
+  <div class="top-bar">
+    <div class="back-btn" onclick="goHome()">←</div>
+    <h2>Ion Memory Trainer</h2>
+  </div>
+  <div class="tab-scroll">
+    <button class="tab-btn active" onclick="switchTab('t2','cheatsheet',this)">Cheat sheet</button>
+    <button class="tab-btn" onclick="switchTab('t2','tricks',this)">Memory tricks</button>
+    <button class="tab-btn" onclick="switchTab('t2','flashcards',this)">Flashcards</button>
+    <button class="tab-btn" onclick="switchTab('t2','quiz',this)">Quiz me</button>
+  </div>
+  <div class="tab-content">
+
+    <!-- CHEAT SHEET -->
+    <div id="t2-cheatsheet" class="panel active">
+      <div class="hint-box">No cheat sheet was given in class — so here is one. Red border = positive (metal). Teal border = negative (non-metal).</div>
+      <div class="section-label" style="color:var(--pos)">Positive ions — metals</div>
+      <div class="ion-grid">
+        <div class="ion-card pos"><div class="ion-sym">Na⁺</div><div class="ion-name">Sodium</div><div class="ion-charge">+1</div><div class="ion-hint">table salt NaCl</div></div>
+        <div class="ion-card pos"><div class="ion-sym">K⁺</div><div class="ion-name">Potassium</div><div class="ion-charge">+1</div><div class="ion-hint">K = Kalium</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Li⁺</div><div class="ion-name">Lithium</div><div class="ion-charge">+1</div><div class="ion-hint">Li-ion battery</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Ca²⁺</div><div class="ion-name">Calcium</div><div class="ion-charge">+2</div><div class="ion-hint">bones &amp; teeth</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Mg²⁺</div><div class="ion-name">Magnesium</div><div class="ion-charge">+2</div><div class="ion-hint">burns white</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Cu²⁺</div><div class="ion-name">Copper</div><div class="ion-charge">+2</div><div class="ion-hint">Cu = Cuprum</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Zn²⁺</div><div class="ion-name">Zinc</div><div class="ion-charge">+2</div><div class="ion-hint">Zn trail story</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Al³⁺</div><div class="ion-name">Aluminium</div><div class="ion-charge">+3</div><div class="ion-hint">foil &amp; cans</div></div>
+        <div class="ion-card pos"><div class="ion-sym">Fe²⁺/³⁺</div><div class="ion-name">Iron</div><div class="ion-charge">+2 or +3</div><div class="ion-hint">Fe = Ferrum</div></div>
+      </div>
+      <div class="section-label" style="color:var(--neg)">Negative ions — non-metals</div>
+      <div class="ion-grid">
+        <div class="ion-card neg"><div class="ion-sym">Cl⁻</div><div class="ion-name">Chloride</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">Br⁻</div><div class="ion-name">Bromide</div><div class="ion-charge">−1</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">O²⁻</div><div class="ion-name">Oxide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">S²⁻</div><div class="ion-name">Sulfide</div><div class="ion-charge">−2</div><div class="ion-hint">-ide ending</div></div>
+        <div class="ion-card neg"><div class="ion-sym">SO₄²⁻</div><div class="ion-name">Sulfate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">CO₃²⁻</div><div class="ion-name">Carbonate</div><div class="ion-charge">−2</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">NO₃⁻</div><div class="ion-name">Nitrate</div><div class="ion-charge">−1</div><div class="ion-hint">-ate, group ion</div></div>
+        <div class="ion-card neg"><div class="ion-sym">OH⁻</div><div class="ion-name">Hydroxide</div><div class="ion-charge">−1</div><div class="ion-hint">"OH no!" = −1</div></div>
+      </div>
+    </div>
+
+    <!-- MEMORY TRICKS -->
+    <div id="t2-tricks" class="panel">
+      <div class="card"><div class="card-title">Rule 1 — the ending gives the clue</div><p style="font-size:13px;line-height:1.6;color:var(--muted)">Non-metals ending in <strong style="color:var(--text)">-ide</strong>: charge −1 (Cl⁻, Br⁻, OH⁻) or −2 (O²⁻, S²⁻).<br>Non-metals ending in <strong style="color:var(--text)">-ate</strong>: always a group ion — SO₄²⁻, CO₃²⁻ (−2) or NO₃⁻ (−1).</p></div>
+      <div class="card"><div class="card-title">Rule 2 — group number = charge</div><p style="font-size:13px;line-height:1.6;color:var(--muted)">Group 1 → always +1. Group 2 → always +2. Aluminium (Group 3) → +3.<br><em style="color:var(--accent4)">Na is Group 1 → Na⁺. Ca is Group 2 → Ca²⁺. Al is Group 3 → Al³⁺.</em></p></div>
+      <div class="card"><div class="card-title">Rule 3 — link symbol to real life</div><p style="font-size:13px;line-height:1.6;color:var(--muted)">Na = table salt. Ca = your bones. Mg = white lab flame. Cu = copper pipes. Al = foil. Fe = iron/steel (Ferrum). K = banana (potassium).</p></div>
+      <div class="card"><div class="card-title">Rule 4 — same charge → one of each</div><p style="font-size:13px;line-height:1.6;color:var(--muted)">If both ions have the same number (e.g. Cu²⁺ and O²⁻) you only need ONE of each → CuO, not Cu₂O₂.</p></div>
+      <div class="card"><div class="card-title">Rule 5 — OH⁻ comes from water</div><p style="font-size:13px;line-height:1.6;color:var(--muted)">Water = H₂O. When a metal reacts with water, the water splits and gives OH (hydroxide) to the product. "OH no, it's negative!" — always −1, always from water reactions.</p></div>
+    </div>
+
+    <!-- FLASHCARDS -->
+    <div id="t2-flashcards" class="panel">
+      <div class="fc-wrap">
+        <div class="fc-tap-hint">Tap the card to flip it</div>
+        <div class="fc-dots" id="fc-dots"></div>
+        <div class="fc-card" onclick="flipCard()">
+          <div class="fc-inner" id="fc-inner">
+            <div class="fc-face fc-front">
+              <div class="fc-q" id="fc-q">—</div>
+              <div class="fc-sub">what is the symbol and charge?</div>
+            </div>
+            <div class="fc-face fc-back">
+              <div class="fc-sym" id="fc-sym">—</div>
+              <div class="fc-charge" id="fc-charge">—</div>
+              <div class="fc-mem" id="fc-mem">—</div>
+            </div>
+          </div>
+        </div>
+        <div class="fc-nav">
+          <button class="fc-nav-btn" onclick="fcMove(-1)">← prev</button>
+          <div class="fc-count" id="fc-count">1 / 17</div>
+          <button class="fc-nav-btn" onclick="fcMove(1)">next →</button>
+        </div>
+        <button class="shuffle-btn" onclick="fcShuffle()">↺ shuffle</button>
+      </div>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="t2-quiz" class="panel">
+      <div class="quiz-score">
+        <div class="score-pill"><span class="green" id="q-correct">0</span>correct</div>
+        <div class="score-pill"><span class="red" id="q-wrong">0</span>wrong</div>
+        <div class="score-pill"><span id="q-total">0</span>total</div>
+      </div>
+      <div class="quiz-mode-row">
+        <button class="qm-btn active" onclick="setQMode('name2sym',this)">Name → symbol</button>
+        <button class="qm-btn" onclick="setQMode('sym2name',this)">Symbol → name</button>
+        <button class="qm-btn" onclick="setQMode('name2charge',this)">Name → charge</button>
+      </div>
+      <div class="quiz-q-card">
+        <div class="quiz-q-text" id="q-question">Loading...</div>
+        <div class="quiz-opts" id="q-opts"></div>
+        <div class="quiz-fb" id="q-fb"></div>
+        <button class="next-btn" id="q-next" onclick="nextQuizQ()">Next question →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ─────────────────────────────────────────────────
+function openTool(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function goHome(){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('home').classList.add('active');
+}
+function switchTab(tool,panel,el){
+  const content=document.getElementById(tool==='t1'?'tool1':'tool2').querySelector('.tab-content');
+  content.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(tool+'-'+panel).classList.add('active');
+  document.getElementById(tool==='t1'?'tool1':'tool2').querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  content.scrollTop=0;
+  if(tool==='t2'&&panel==='flashcards') renderFC();
+  if(tool==='t2'&&panel==='quiz') nextQuizQ();
+  if(tool==='t1'&&panel==='observations') renderObs();
+}
+
+// ── FORMULA BUILDER ────────────────────────────────────────────
+const fData={
+  'calcium chloride':{pos:'Ca',posN:'Calcium',posC:2,neg:'Cl',negN:'Chloride',negC:1,f:'CaCl₂',t:'1×Ca²⁺=+2 | 2×Cl⁻=−2 | total=0 ✓'},
+  'aluminium oxide':{pos:'Al',posN:'Aluminium',posC:3,neg:'O',negN:'Oxide',negC:2,f:'Al₂O₃',t:'2×Al³⁺=+6 | 3×O²⁻=−6 | total=0 ✓'},
+  'copper oxide':{pos:'Cu',posN:'Copper',posC:2,neg:'O',negN:'Oxide',negC:2,f:'CuO',t:'Same charge → 1 of each. 1×Cu²⁺=+2 | 1×O²⁻=−2 | total=0 ✓'},
+  'sodium sulfate':{pos:'Na',posN:'Sodium',posC:1,neg:'SO₄',negN:'Sulfate',negC:2,f:'Na₂SO₄',t:'2×Na⁺=+2 | 1×SO₄²⁻=−2 | total=0 ✓'},
+  'magnesium chloride':{pos:'Mg',posN:'Magnesium',posC:2,neg:'Cl',negN:'Chloride',negC:1,f:'MgCl₂',t:'1×Mg²⁺=+2 | 2×Cl⁻=−2 | total=0 ✓'},
+  'zinc oxide':{pos:'Zn',posN:'Zinc',posC:2,neg:'O',negN:'Oxide',negC:2,f:'ZnO',t:'Same charge → 1 of each. 1×Zn²⁺=+2 | 1×O²⁻=−2 | total=0 ✓'},
+  'potassium chloride':{pos:'K',posN:'Potassium',posC:1,neg:'Cl',negN:'Chloride',negC:1,f:'KCl',t:'Same charge → 1 of each. 1×K⁺=+1 | 1×Cl⁻=−1 | total=0 ✓'},
+  'aluminium chloride':{pos:'Al',posN:'Aluminium',posC:3,neg:'Cl',negN:'Chloride',negC:1,f:'AlCl₃',t:'1×Al³⁺=+3 | 3×Cl⁻=−3 | total=0 ✓'},
+  'iron(iii) oxide':{pos:'Fe',posN:'Iron(III)',posC:3,neg:'O',negN:'Oxide',negC:2,f:'Fe₂O₃',t:'2×Fe³⁺=+6 | 3×O²⁻=−6 | total=0 ✓'},
+};
+function showFormula1(){
+  const d=fData[document.getElementById('f1-sel').value];
+  const r=document.getElementById('f1-result');
+  r.innerHTML=`
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">The two ions:</div>
+    <div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.3);border-radius:8px;padding:10px 14px;text-align:center">
+        <div style="font-size:20px;font-weight:700;font-family:'Space Mono',monospace;color:var(--pos)">${d.pos}<sup>${d.posC>1?d.posC:''}+</sup></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.posN} charge +${d.posC}</div>
+      </div>
+      <div style="background:rgba(78,205,196,.1);border:1px solid rgba(78,205,196,.3);border-radius:8px;padding:10px 14px;text-align:center">
+        <div style="font-size:20px;font-weight:700;font-family:'Space Mono',monospace;color:var(--neg)">${d.neg}<sup>${d.negC>1?d.negC:''}−</sup></div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${d.negN} charge −${d.negC}</div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Swap ${d.posC} and ${d.negC} → use as subscripts:</div>
+    <div class="big-formula">${d.f}</div>
+    <div class="balance-check">${d.t}</div>`;
+  r.classList.add('show');
+}
+
+// ── OBSERVATIONS ───────────────────────────────────────────────
+const obsSummaries={
+  acid:{title:'Metal + acid',color:'var(--accent2)',points:['Vigorous fizzing — hydrogen gas is produced','The metal slowly dissolves and disappears','The solution warms up — heat is released','The fizzing stops when the metal is used up']},
+  oxygen:{title:'Metal + oxygen',color:'var(--accent4)',points:['The metal burns in a flame','Magnesium: very bright white flame, white powder left behind','Sodium: orange/yellow flame','Iron: glows orange, gives off sparks']},
+  water:{title:'Metal + water',color:'var(--accent3)',points:['Hydrogen gas bubbles are produced','Sodium: very vigorous, fizzes rapidly, moves on surface, may ignite','Magnesium: very slow — barely any bubbles in cold water','Copper: no reaction at all']}
+};
+const obsQuestions=[
+  {type:'acid',scenario:'A piece of magnesium is placed into hydrochloric acid. What do you observe?',correct:['Vigorous fizzing / bubbles of gas','The magnesium slowly dissolves','The test tube gets warm'],wrong:['Glows bright white','The liquid turns red','Nothing happens'],eq:'Magnesium + Hydrochloric acid → Magnesium chloride + Hydrogen gas',note:'Metal + acid → metal salt + hydrogen gas. The fizzing IS hydrogen gas.'},
+  {type:'acid',scenario:'A strip of zinc is placed into sulfuric acid. What do you observe?',correct:['Steady fizzing / bubbles','The zinc slowly dissolves','The solution warms up'],wrong:['Bright white flame','The zinc floats','No reaction'],eq:'Zinc + Sulfuric acid → Zinc sulfate + Hydrogen gas',note:'Same pattern but zinc is less reactive than magnesium — slower fizzing.'},
+  {type:'oxygen',scenario:'Magnesium ribbon is held in a flame. What do you observe?',correct:['Burns with a very bright white flame','White powder is left behind','Dazzling — hard to look at directly'],wrong:['Burns with orange flame','Fizzes and bubbles','Melts into liquid'],eq:'Magnesium + Oxygen → Magnesium oxide',note:'Metal + oxygen → metal oxide. No hydrogen gas in this reaction.'},
+  {type:'oxygen',scenario:'Iron wool is held in a flame. What do you observe?',correct:['Glows bright orange/red and gives off sparks','The iron slowly burns away','Dark powder (iron oxide) left behind'],wrong:['Burns with white dazzling flame','Vigorous fizzing','Nothing — iron does not burn'],eq:'Iron + Oxygen → Iron oxide',note:'Iron burns more slowly than magnesium — glows and sparks rather than a white flame.'},
+  {type:'water',scenario:'A small piece of sodium is placed on the surface of water. What do you observe?',correct:['Fizzes very vigorously','Melts into a ball and moves on the surface','May produce a flame'],wrong:['Sinks quietly and dissolves slowly','Glows bright white','No reaction'],eq:'Sodium + Water → Sodium hydroxide + Hydrogen gas',note:'Sodium is very reactive with water. The gas is hydrogen — it can ignite.'},
+  {type:'water',scenario:'A magnesium strip is placed in cold water. What do you observe?',correct:['Very slow — only a few tiny bubbles','Barely any visible change in a short time'],wrong:['Vigorous fizzing immediately','The magnesium catches fire','Water turns coloured'],eq:'Magnesium + Water → Magnesium hydroxide + Hydrogen gas',note:'Magnesium reacts MUCH slower with water than with acid.'},
+];
+let currentObsType='acid', obsState={};
+function setObsType(type,el){
+  currentObsType=type;
+  document.querySelectorAll('.rt-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderObs();
+}
+function renderObs(){
+  const s=obsSummaries[currentObsType];
+  document.getElementById('obs-summary-area').innerHTML=`
+    <div class="obs-summary">
+      <h4 style="color:${s.color}">${s.title} — what to observe</h4>
+      ${s.points.map(p=>`<div style="font-size:12px;color:var(--muted);padding:3px 0;border-bottom:1px solid var(--border);line-height:1.4">• ${p}</div>`).join('')}
+    </div>`;
+  const qs=obsQuestions.filter(q=>q.type===currentObsType);
+  obsState={};
+  qs.forEach((_,i)=>{obsState[i]=new Set()});
+  document.getElementById('obs-q-area').innerHTML=qs.map((q,i)=>`
+    <div class="q-card" id="oq-${i}">
+      <div class="q-type-tag">${q.type.replace('acid','Metal + acid').replace('oxygen','Metal + oxygen').replace('water','Metal + water')} — Q${i+1}</div>
+      <div class="q-text">${q.scenario}</div>
+      <div class="q-hint">Select ALL correct observations:</div>
+      <div class="opts-grid" id="oopts-${i}">
+        ${[...q.correct,...q.wrong].sort(()=>Math.random()-.5).map(o=>`<button class="opt" onclick="toggleObs(${i},this,'${o.replace(/'/g,"\\'")}')">${o}</button>`).join('')}
+      </div>
+      <button class="check-btn" id="ochk-${i}" onclick="checkObs(${i})">Check my answers</button>
+      <div class="fb-msg" id="ofb-${i}"></div>
+      <div class="eq-reveal" id="oeq-${i}"><strong>Word equation:</strong>${q.eq}<br><span style="color:var(--muted);font-size:11px">${q.note}</span></div>
+    </div>`).join('');
+}
+function toggleObs(qi,el,val){
+  if(el.classList.contains('disabled'))return;
+  if(obsState[qi].has(val)){obsState[qi].delete(val);el.classList.remove('selected')}
+  else{obsState[qi].add(val);el.classList.add('selected')}
+}
+function checkObs(qi){
+  const qs=obsQuestions.filter(q=>q.type===currentObsType);
+  const q=qs[qi];
+  document.querySelectorAll(`#oopts-${qi} .opt`).forEach(o=>{
+    o.classList.add('disabled');o.classList.remove('selected');
+    if(q.correct.includes(o.textContent))o.classList.add('reveal');
+    else if(obsState[qi].has(o.textContent))o.classList.add('wrong');
+  });
+  const sel=[...obsState[qi]];
+  const ok=sel.filter(v=>q.correct.includes(v)).length;
+  const bad=sel.filter(v=>!q.correct.includes(v)).length;
+  const fb=document.getElementById(`ofb-${qi}`);
+  fb.textContent=bad===0&&ok===q.correct.length?'All correct!':
+    `${ok} of ${q.correct.length} correct observations found. Green = correct answers.`;
+  fb.className='fb-msg '+(bad===0&&ok===q.correct.length?'ok':'bad');
+  document.getElementById(`oeq-${qi}`).classList.add('show');
+  document.getElementById(`ochk-${qi}`).style.display='none';
+}
+
+// ── WORD EQUATIONS ─────────────────────────────────────────────
+const metals=['Magnesium','Sodium','Lithium','Aluminium','Iron','Copper'];
+const acids=['hydrochloric acid','sulfuric acid','nitric acid'];
+const saltMap={'hydrochloric acid':'chloride','sulfuric acid':'sulfate','nitric acid':'nitrate'};
+const patNotes={
+  oxygen:'Product = metal name + "oxide". No hydrogen gas — this is burning in air.',
+  water:'Product = metal name + "hydroxide", plus hydrogen gas. The OH comes from water splitting.',
+  acid:'Salt name = metal name + acid suffix. HCl → chloride, H₂SO₄ → sulfate, HNO₃ → nitrate. Always + hydrogen gas.'
+};
+let curPat=null;
+function selectPat(type,el){
+  document.querySelectorAll('.pat-card').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel');curPat=type;
+  const instr=document.getElementById('eq-instruction');
+  const sels=document.getElementById('eq-selects');
+  document.getElementById('eq-output').classList.remove('show');
+  document.getElementById('eq-builder').classList.add('show');
+  if(type==='oxygen'){
+    instr.textContent='Pick the metal — the equation always ends in "metal oxide".';
+    sels.innerHTML=`<select id="em"><option value="">pick a metal...</option>${metals.map(m=>`<option>${m}</option>`).join('')}</select>`;
+  }else if(type==='water'){
+    instr.textContent='Pick the metal — always produces metal hydroxide + hydrogen gas.';
+    sels.innerHTML=`<select id="em"><option value="">pick a metal...</option>${metals.map(m=>`<option>${m}</option>`).join('')}</select>`;
+  }else{
+    instr.textContent='Pick the metal AND the acid. The acid type determines the salt name.';
+    sels.innerHTML=`<select id="em"><option value="">pick a metal...</option>${metals.map(m=>`<option>${m}</option>`).join('')}</select>
+    <select id="ea"><option value="">pick an acid...</option>${acids.map(a=>`<option>${a}</option>`).join('')}</select>`;
+  }
+}
+function buildEq(){
+  const m=document.getElementById('em')?.value;
+  const out=document.getElementById('eq-output');
+  if(!m){out.innerHTML='<div class="eq-output-text" style="color:var(--accent2)">Please pick a metal first.</div>';out.classList.add('show');return;}
+  let eq='';
+  if(curPat==='oxygen') eq=`${m} + oxygen  →  ${m} oxide`;
+  else if(curPat==='water') eq=`${m} + water  →  ${m} hydroxide + hydrogen gas`;
+  else{
+    const a=document.getElementById('ea')?.value;
+    if(!a){out.innerHTML='<div class="eq-output-text" style="color:var(--accent2)">Please pick an acid too.</div>';out.classList.add('show');return;}
+    eq=`${m} + ${a}  →  ${m} ${saltMap[a]} + hydrogen gas`;
+  }
+  document.getElementById('eq-output-text').textContent=eq;
+  document.getElementById('eq-note').textContent=patNotes[curPat];
+  out.classList.add('show');
+}
+
+// ── FLASHCARDS ─────────────────────────────────────────────────
+const ions=[
+  {n:'Sodium',s:'Na⁺',c:'+1',h:'Group 1. NaCl = table salt.',t:'pos'},
+  {n:'Potassium',s:'K⁺',c:'+1',h:'Group 1. K from Kalium (Latin).',t:'pos'},
+  {n:'Lithium',s:'Li⁺',c:'+1',h:'Group 1. Li-ion batteries.',t:'pos'},
+  {n:'Calcium',s:'Ca²⁺',c:'+2',h:'Group 2. Bones and teeth.',t:'pos'},
+  {n:'Magnesium',s:'Mg²⁺',c:'+2',h:'Group 2. Burns with white flame.',t:'pos'},
+  {n:'Copper',s:'Cu²⁺',c:'+2',h:'Cu from Cuprum. Pipes and wires.',t:'pos'},
+  {n:'Zinc',s:'Zn²⁺',c:'+2',h:'Zn trail — from the Elemental Tale!',t:'pos'},
+  {n:'Aluminium',s:'Al³⁺',c:'+3',h:'Group 3. Foil and drink cans.',t:'pos'},
+  {n:'Iron',s:'Fe²⁺/³⁺',c:'+2 or +3',h:'Fe from Ferrum (Latin). Rusts.',t:'pos'},
+  {n:'Chloride',s:'Cl⁻',c:'−1',h:'-ide ending. Charge −1.',t:'neg'},
+  {n:'Bromide',s:'Br⁻',c:'−1',h:'-ide ending. Charge −1.',t:'neg'},
+  {n:'Oxide',s:'O²⁻',c:'−2',h:'-ide ending. Charge −2.',t:'neg'},
+  {n:'Sulfide',s:'S²⁻',c:'−2',h:'-ide ending. Charge −2.',t:'neg'},
+  {n:'Sulfate',s:'SO₄²⁻',c:'−2',h:'-ate ending. Group ion. Charge −2.',t:'neg'},
+  {n:'Carbonate',s:'CO₃²⁻',c:'−2',h:'-ate ending. Group ion. Charge −2.',t:'neg'},
+  {n:'Nitrate',s:'NO₃⁻',c:'−1',h:'-ate ending. Group ion. Charge −1.',t:'neg'},
+  {n:'Hydroxide',s:'OH⁻',c:'−1',h:'"OH no!" Always −1. Comes from water splitting.',t:'neg'},
+];
+let fcDeck=[...ions],fcIdx=0;
+function renderFC(){
+  const dots=document.getElementById('fc-dots');
+  dots.innerHTML=fcDeck.map((_,i)=>`<div class="fc-dot${i<fcIdx?' seen':i===fcIdx?' cur':''}"></div>`).join('');
+  const d=fcDeck[fcIdx];
+  document.getElementById('fc-q').textContent=d.n;
+  document.getElementById('fc-sym').textContent=d.s;
+  document.getElementById('fc-charge').textContent='charge '+d.c+(d.t==='pos'?' (positive)':' (negative)');
+  document.getElementById('fc-mem').textContent=d.h;
+  document.getElementById('fc-count').textContent=(fcIdx+1)+' / '+fcDeck.length;
+  document.getElementById('fc-inner').classList.remove('flipped');
+}
+function flipCard(){document.getElementById('fc-inner').classList.toggle('flipped')}
+function fcMove(dir){fcIdx=Math.max(0,Math.min(fcDeck.length-1,fcIdx+dir));renderFC()}
+function fcShuffle(){for(let i=fcDeck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[fcDeck[i],fcDeck[j]]=[fcDeck[j],fcDeck[i]];}fcIdx=0;renderFC()}
+
+// ── QUIZ ────────────────────────────────────────────────────────
+let qMode='name2sym',qCorrect=0,qWrong=0,qAnswered=false;
+function setQMode(m,el){
+  qMode=m;
+  document.querySelectorAll('.qm-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  qCorrect=0;qWrong=0;
+  document.getElementById('q-correct').textContent='0';
+  document.getElementById('q-wrong').textContent='0';
+  document.getElementById('q-total').textContent='0';
+  nextQuizQ();
+}
+function nextQuizQ(){
+  qAnswered=false;
+  document.getElementById('q-fb').className='quiz-fb';
+  document.getElementById('q-next').style.display='none';
+  const cur=ions[Math.floor(Math.random()*ions.length)];
+  let qText='',correct='';
+  if(qMode==='name2sym'){qText='What is the symbol for '+cur.n+'?';correct=cur.s;}
+  else if(qMode==='sym2name'){qText='What is the name of  '+cur.s+'?';correct=cur.n;}
+  else{qText='What is the charge of '+cur.n+'?';correct=cur.c;}
+  document.getElementById('q-question').textContent=qText;
+  let pool=[correct];
+  const sh=[...ions].sort(()=>Math.random()-.5);
+  for(const ion of sh){
+    if(pool.length>=4)break;
+    const opt=qMode==='name2sym'?ion.s:qMode==='sym2name'?ion.n:ion.c;
+    if(!pool.includes(opt))pool.push(opt);
+  }
+  pool.sort(()=>Math.random()-.5);
+  document.getElementById('q-opts').innerHTML=pool.map(o=>`<button class="quiz-opt" onclick="answerQuiz(this,'${o.replace(/'/g,"\\'")}','${correct.replace(/'/g,"\\'")}','${cur.h.replace(/'/g,"\\'")}')">${o}</button>`).join('');
+}
+function answerQuiz(el,chosen,correct,hint){
+  if(qAnswered)return;
+  qAnswered=true;
+  document.querySelectorAll('.quiz-opt').forEach(o=>{
+    o.classList.add('disabled');
+    if(o.textContent.trim()===correct)o.classList.add('reveal');
+  });
+  const fb=document.getElementById('q-fb');
+  if(chosen===correct){
+    qCorrect++;el.classList.add('correct');
+    fb.textContent='Correct! '+hint;fb.className='quiz-fb ok';
+  }else{
+    qWrong++;el.classList.add('wrong');
+    fb.textContent='Not quite — answer is '+correct+'. '+hint;fb.className='quiz-fb bad';
+  }
+  document.getElementById('q-correct').textContent=qCorrect;
+  document.getElementById('q-wrong').textContent=qWrong;
+  document.getElementById('q-total').textContent=qCorrect+qWrong;
+  document.getElementById('q-next').style.display='block';
+}
+
+// init
+renderObs();
+renderFC();
+nextQuizQ();
+</script>
+</body>
+</html>
